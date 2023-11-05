@@ -112,14 +112,8 @@ do
 			do
 				cat $2 | awk -v user_id=$var '$1==user_id {print $2, $3}' | sort -n >> rated_output.txt
 			done
-			id=0;
-			cat rated_output.txt | sort -n | awk -v movie_id=$id '{
-				movie_id=$1;
-				rate=$2;
-				sum[movie_id] += rate;
-				cnt[movie_id]++;
-			} END {print sum, cnt}
-			}'
+			id=0
+			cat rated_output.txt | sort -n | awk -v movie_id=$id 'movie_id==0{movie_id=$1} movie_id!=$1{printf "%d %s\n", movie_id, sum/cnt; sum=0; cnt=0; movie_id=$1} movie_id==$1{sum+=$2; cnt+=1} END {printf "%d %s\n", movie_id, sum/cnt}'
 			echo ""
 		fi
 		;;
